@@ -1,47 +1,28 @@
-#include <stdio.h>
+#include <stdint.h>
 
-const int DISPLAY_WIDTH = 64;
-const int DISPLAY_HEIGHT = 36;
+#include "console_display.h"
+#include "rasterizer.h"
+
+// Buffer holding the final pixel color data
+uint8_t display_buffer[3 * 64 * 36];
+
+float screen_space_vertex_buffer[] =
+{
+    0.5, 0.25,
+    0.75, 0.75,
+    0.25, 0.75,
+};
 
 int main()
 {
-    // Enable alternate screen buffer
-    printf("\x1b[?1049h");
-    fflush(stdout);
+    initialize_display();
 
-    // Clear space for rendering
-    for (int y = 0; y < DISPLAY_HEIGHT; y++)
+    for (uint16_t fakeLoop = 0; fakeLoop < 10000; fakeLoop++)
     {
-        printf("\n");
+        rasterize_screen_space_vertex_buffer(screen_space_vertex_buffer, sizeof(screen_space_vertex_buffer), display_buffer);
+        write_to_display(display_buffer);
     }
 
-    for (int fakeLoop = 0; fakeLoop < 100000; fakeLoop++)
-    {
-        // Move to the top of display
-        printf("\033[%dA\r", DISPLAY_HEIGHT);
-        fflush(stdout);
-
-        // Display image
-        for (int y = 0; y < DISPLAY_HEIGHT; y++)
-        {
-            // Set rgb background color
-            printf("\033[48;2;0;255;255m");
-
-            // Print line
-            printf("%*s", DISPLAY_WIDTH * 2, "");
-
-            // Reset terminal to default color and move to new line
-            printf("\033[0m\n");
-        }
-    }
-
-    // Return to the default screen buffer
-    printf("\x1b[?1049l");
-    fflush(stdout);
-
-    // Reset terminal to default and return
-    printf("\033[0m\n");
-    printf("Finished.\n");
-    fflush(stdout);
+    close_display();
     return 0;
 }
