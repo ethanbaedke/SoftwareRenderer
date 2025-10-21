@@ -9,8 +9,8 @@ uint8_t display_buffer[3 * 64 * 36];
 float screen_space_vertex_buffer[] =
 {
     0.5, 0.25,
-    0.75, 0.75,
     0.25, 0.75,
+    0.75, 0.75,
 };
 
 int main()
