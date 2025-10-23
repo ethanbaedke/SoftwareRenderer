@@ -10,6 +10,10 @@ int initialize_display()
     printf("\033[?1049h");
     fflush(stdout);
 
+    // Hide cursor
+    printf("\033[?25l");
+    fflush(stdout);
+
     // Clear space for rendering
     for (int y = 0; y < DISPLAY_HEIGHT; y++)
     {
@@ -57,6 +61,10 @@ int close_display()
 {
     // Return to the default screen buffer
     printf("\033[?1049l");
+    fflush(stdout);
+
+    // Show cursor
+    printf("\033[?25h");
     fflush(stdout);
 
     // Reset terminal to default and return

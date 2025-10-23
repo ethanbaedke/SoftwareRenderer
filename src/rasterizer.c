@@ -66,10 +66,10 @@ int rasterize_screen_space_vertex_buffer(float screen_space_vertex_buffer[], uin
 
 int fill_pixel(uint16_t x, uint16_t y, uint8_t display_buffer[])
 {
-    uint16_t start = ((y * DISPLAY_WIDTH) + x) * 3;
+    uint32_t start = ((y * DISPLAY_WIDTH) + x) * 3;
     display_buffer[start] = 255;
-    display_buffer[start + 1] = 255;
-    display_buffer[start + 2] = 255;
+    display_buffer[start + 1] = 60;
+    display_buffer[start + 2] = 190;
 
     return 0;
 }
