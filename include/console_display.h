@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-int initialize_display();
-int write_to_display(uint8_t display_buffer[]);
-int close_display();
+int console_initialize_display();
+int console_update_display(uint8_t display_buffer[]);
+int console_close_display();
 
 #endif

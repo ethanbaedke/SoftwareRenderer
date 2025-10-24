@@ -4,7 +4,7 @@
 
 #include "constants.h"
 
-int initialize_display()
+int console_initialize_display()
 {
     // Enable alternate screen buffer
     printf("\033[?1049h");
@@ -23,7 +23,7 @@ int initialize_display()
     return 0;
 }
 
-int write_to_display(uint8_t display_buffer[])
+int console_update_display(uint8_t display_buffer[])
 {
     // Move to the top of display
     printf("\033[%dA\r", DISPLAY_HEIGHT);
@@ -57,7 +57,7 @@ int write_to_display(uint8_t display_buffer[])
     return 0;
 }
 
-int close_display()
+int console_close_display()
 {
     // Return to the default screen buffer
     printf("\033[?1049l");
