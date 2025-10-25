@@ -2,9 +2,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <stdio.h>
 
 #include "constants.h"
+#include "logger.h"
 
 Display *x_display;
 Window x_window;
@@ -12,13 +12,13 @@ GC x_graphics_context;
 
 int x11_initialize_display()
 {
-    printf("Initializing X11 display.\n");
+    log_message("Initializing X11 display.");
 
     // Connect to the server
     x_display = XOpenDisplay(NULL);
     if (x_display == NULL)
     {
-        printf("Could not open X11 display.\n");
+        log_error("Could not open X11 display.");
         return -1;
     }
 
@@ -45,7 +45,7 @@ int x11_initialize_display()
         XNextEvent(x_display, &e);
     }
 
-    printf("X11 display initialized.\n");
+    log_message("X11 display initialized.");
 }
 
 int x11_update_display(uint8_t display_buffer[])
@@ -77,9 +77,15 @@ int x11_update_display(uint8_t display_buffer[])
 
 int x11_close_display()
 {
-    printf("Closing X11 display.\n");
+    if (x_display == NULL)
+    {
+        log_warning("Attempting to close non-existent X11 display.");
+        return -1;
+    }
+
+    log_message("Closing X11 display.");
 
     XCloseDisplay(x_display);
 
-    printf("X11 display closed.\n");
+    log_message("X11 display closed.");
 }

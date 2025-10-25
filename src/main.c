@@ -1,15 +1,17 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <unistd.h> // TESTING ONLY: used for sleep()
 #include <stdlib.h> // For malloc()
 
 #include "constants.h"
+#include "logger.h"
 #include "x11_display.h"
 #include "rasterizer.h"
 
 // Buffer holding the final pixel color data
 uint8_t *display_buffer;
 
+int application_entry_point();
+void application_cleanup();
 void test_rotate_triangle();
 
 float screen_space_vertex_buffer[] =
@@ -21,18 +23,29 @@ float screen_space_vertex_buffer[] =
 
 int main()
 {
-    printf("Starting Software Renderer.\n");
-    fflush(stdout);
+    log_message("Starting Software Renderer.");
+    application_entry_point();
 
+    application_cleanup();
+    log_message("Closing Software Renderer.");
+
+    return 0;
+}
+
+int application_entry_point()
+{
     // Initialize display buffer
     display_buffer = malloc(3 * DISPLAY_WIDTH * DISPLAY_HEIGHT);
 
     // Initialize x11 display
-    x11_initialize_display();
+    if (x11_initialize_display() == -1)
+    {
+        log_error("X11 display failed to initialize.");
+        return -1;
+    }
 
     // Core loop
-    printf("Starting core loop.\n");
-    fflush(stdout);
+    log_message("Starting core loop.");
     while (1)
     {
         // TESTING
@@ -55,16 +68,16 @@ int main()
 
         sleep(1.0f / 30.0f);
     }
-    printf("Core loop exited.\n");
-    fflush(stdout);
+    log_message("Core loop exited.");
 
+    return 0;
+}
+
+void application_cleanup()
+{
     x11_close_display();
 
     free(display_buffer);
-
-    printf("Closing Software Renderer.\n");
-    fflush(stdout);
-    return 0;
 }
 
 //TESTING
